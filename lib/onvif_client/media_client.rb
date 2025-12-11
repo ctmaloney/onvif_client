@@ -20,11 +20,11 @@ module OnvifClient
     # Get stream URI for a profile
     def get_stream_uri(profile_token:, protocol: "RTSP")
       message = {
-        "ProfileToken" => profile_token,
-        "StreamSetup" => {
-          "Stream" => protocol,
-          "Transport" => {
-            "Protocol" => protocol
+        "trt:ProfileToken" => profile_token,
+        "trt:StreamSetup" => {
+          stream: protocol,
+          transport: {
+            protocol: protocol
           }
         }
       }
@@ -35,7 +35,7 @@ module OnvifClient
 
     # Get snapshot URI
     def get_snapshot_uri(profile_token:)
-      message = { "ProfileToken" => profile_token }
+      message = { "trt:ProfileToken" => profile_token }
       response = client.call(:get_snapshot_uri, message: message)
       parse_snapshot_uri(response)
     end
@@ -89,7 +89,7 @@ module OnvifClient
           "xmlns:tt" => "http://www.onvif.org/ver10/schema"
         },
         wsse_auth: [username, password, :digest],
-        convert_request_keys_to: :none,
+        convert_request_keys_to: :camelcase,
         pretty_print_xml: false,
         log: false
       )

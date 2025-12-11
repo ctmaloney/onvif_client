@@ -19,7 +19,7 @@ module OnvifClient
 
     # Get PTZ configuration
     def get_configuration(configuration_token:)
-      message = { "PTZConfigurationToken" => configuration_token }
+      message = { "tptz:PTZConfigurationToken" => configuration_token }
       response = client.call(:get_configuration, message: message)
       parse_configuration(response.body[:get_configuration_response][:ptz_configuration])
     end
@@ -27,10 +27,10 @@ module OnvifClient
     # Continuous move (for joystick-like control)
     def continuous_move(profile_token:, velocity:, timeout: nil)
       message = {
-        "ProfileToken" => profile_token,
-        "Velocity" => velocity
+        "tptz:ProfileToken" => profile_token,
+        "tptz:Velocity" => velocity
       }
-      message["Timeout"] = timeout if timeout
+      message["tptz:Timeout"] = timeout if timeout
 
       response = client.call(:continuous_move, message: message)
       { success: true }
@@ -39,10 +39,10 @@ module OnvifClient
     # Absolute move to specific position
     def absolute_move(profile_token:, position:, speed: nil)
       message = {
-        "ProfileToken" => profile_token,
-        "Position" => position
+        "tptz:ProfileToken" => profile_token,
+        "tptz:Position" => position
       }
-      message["Speed"] = speed if speed
+      message["tptz:Speed"] = speed if speed
 
       response = client.call(:absolute_move, message: message)
       { success: true }
@@ -51,10 +51,10 @@ module OnvifClient
     # Relative move from current position
     def relative_move(profile_token:, translation:, speed: nil)
       message = {
-        "ProfileToken" => profile_token,
-        "Translation" => translation
+        "tptz:ProfileToken" => profile_token,
+        "tptz:Translation" => translation
       }
-      message["Speed"] = speed if speed
+      message["tptz:Speed"] = speed if speed
 
       response = client.call(:relative_move, message: message)
       { success: true }
@@ -63,9 +63,9 @@ module OnvifClient
     # Stop PTZ movement
     def stop(profile_token:, pan_tilt: true, zoom: true)
       message = {
-        "ProfileToken" => profile_token,
-        "PanTilt" => pan_tilt,
-        "Zoom" => zoom
+        "tptz:ProfileToken" => profile_token,
+        "tptz:PanTilt" => pan_tilt,
+        "tptz:Zoom" => zoom
       }
 
       response = client.call(:stop, message: message)
@@ -74,15 +74,15 @@ module OnvifClient
 
     # Get PTZ status
     def get_status(profile_token:)
-      message = { "ProfileToken" => profile_token }
+      message = { "tptz:ProfileToken" => profile_token }
       response = client.call(:get_status, message: message)
       parse_status(response)
     end
 
     # Go to home position
     def goto_home_position(profile_token:, speed: nil)
-      message = { "ProfileToken" => profile_token }
-      message["Speed"] = speed if speed
+      message = { "tptz:ProfileToken" => profile_token }
+      message["tptz:Speed"] = speed if speed
 
       response = client.call(:goto_home_position, message: message)
       { success: true }
@@ -90,23 +90,23 @@ module OnvifClient
 
     # Set home position
     def set_home_position(profile_token:)
-      message = { "ProfileToken" => profile_token }
+      message = { "tptz:ProfileToken" => profile_token }
       response = client.call(:set_home_position, message: message)
       { success: true }
     end
 
     # Get presets
     def get_presets(profile_token:)
-      message = { "ProfileToken" => profile_token }
+      message = { "tptz:ProfileToken" => profile_token }
       response = client.call(:get_presets, message: message)
       parse_presets(response)
     end
 
     # Set preset
     def set_preset(profile_token:, preset_name: nil, preset_token: nil)
-      message = { "ProfileToken" => profile_token }
-      message["PresetName"] = preset_name if preset_name
-      message["PresetToken"] = preset_token if preset_token
+      message = { "tptz:ProfileToken" => profile_token }
+      message["tptz:PresetName"] = preset_name if preset_name
+      message["tptz:PresetToken"] = preset_token if preset_token
 
       response = client.call(:set_preset, message: message)
       { preset_token: response.body[:set_preset_response][:preset_token] }
@@ -115,8 +115,8 @@ module OnvifClient
     # Remove preset
     def remove_preset(profile_token:, preset_token:)
       message = {
-        "ProfileToken" => profile_token,
-        "PresetToken" => preset_token
+        "tptz:ProfileToken" => profile_token,
+        "tptz:PresetToken" => preset_token
       }
 
       response = client.call(:remove_preset, message: message)
@@ -126,10 +126,10 @@ module OnvifClient
     # Goto preset
     def goto_preset(profile_token:, preset_token:, speed: nil)
       message = {
-        "ProfileToken" => profile_token,
-        "PresetToken" => preset_token
+        "tptz:ProfileToken" => profile_token,
+        "tptz:PresetToken" => preset_token
       }
-      message["Speed"] = speed if speed
+      message["tptz:Speed"] = speed if speed
 
       response = client.call(:goto_preset, message: message)
       { success: true }
@@ -147,7 +147,7 @@ module OnvifClient
           "xmlns:tt" => "http://www.onvif.org/ver10/schema"
         },
         wsse_auth: [username, password, :digest],
-        convert_request_keys_to: :none,
+        convert_request_keys_to: :camelcase,
         pretty_print_xml: false,
         log: false
       )
