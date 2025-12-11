@@ -32,17 +32,21 @@ module OnvifClient
       raise Error, "SOAP fault: #{e.message}"
     rescue Savon::HTTPError => e
       raise ConnectionError, "Connection failed: #{e.message}"
+    rescue StandardError => e
+      raise Error, "Unexpected error: #{e.class} - #{e.message}"
     end
 
     # Get capabilities
     def get_capabilities(category: "All")
-      response = device_client.call(:get_capabilities, message: { "Category" => category })
+      message = { "wsdl:Category" => category }
+      response = device_client.call(:get_capabilities, message: message)
       parse_capabilities(response)
     end
 
     # Get services
     def get_services(include_capability: true)
-      response = device_client.call(:get_services, message: { "IncludeCapability" => include_capability })
+      message = { "wsdl:IncludeCapability" => include_capability }
+      response = device_client.call(:get_services, message: message)
       parse_services(response)
     end
 
@@ -93,11 +97,8 @@ module OnvifClient
         endpoint: endpoint,
         namespace: namespace,
         env_namespace: :soap,
-        namespaces: {
-          "xmlns:tds" => "http://www.onvif.org/ver10/device/wsdl"
-        },
         wsse_auth: [username, password, :digest],
-        convert_request_keys_to: :none,
+        convert_request_keys_to: :camelcase,
         pretty_print_xml: false,
         log: false
       )

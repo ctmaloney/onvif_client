@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description   = "A modern, actively maintained Ruby client for controlling ONVIF-compliant IP cameras with support for device discovery, stream management, and PTZ controls"
   spec.homepage      = "https://github.com/yourusername/onvif_client"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
