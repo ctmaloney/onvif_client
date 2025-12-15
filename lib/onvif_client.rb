@@ -13,7 +13,7 @@ module OnvifClient
   end
 
   # Convenience method to create a client
-  def self.connect(host:, username:, password:, port: 80)
-    Client.new(host: host, username: username, password: password, port: port)
+  def self.connect(host:, username:, password:, port: 80, timeout: 30)
+    Client.new(host: host, username: username, password: password, port: port, timeout: timeout)
   end
 end

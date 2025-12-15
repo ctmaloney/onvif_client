@@ -13,13 +13,14 @@ module OnvifClient
     class AuthenticationError < Error; end
     class NotSupportedError < Error; end
 
-    attr_reader :host, :port, :username, :password, :device_client
+    attr_reader :host, :port, :username, :password, :device_client, :timeout
 
-    def initialize(host:, username:, password:, port: 80)
+    def initialize(host:, username:, password:, port: 80, timeout: 30)
       @host = host
       @port = port
       @username = username
       @password = password
+      @timeout = timeout
       @device_client = create_soap_client(device_service_url)
     end
 
@@ -100,7 +101,9 @@ module OnvifClient
         wsse_auth: [username, password, :digest],
         convert_request_keys_to: :camelcase,
         pretty_print_xml: false,
-        log: false
+        log: false,
+        open_timeout: timeout,
+        read_timeout: timeout
       )
     end
 

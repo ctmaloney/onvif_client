@@ -2,12 +2,13 @@ require "savon"
 
 module OnvifClient
   class MediaClient
-    attr_reader :endpoint, :username, :password, :client
+    attr_reader :endpoint, :username, :password, :client, :timeout
 
-    def initialize(endpoint:, username:, password:)
+    def initialize(endpoint:, username:, password:, timeout: 30)
       @endpoint = endpoint
       @username = username
       @password = password
+      @timeout = timeout
       @client = create_soap_client
     end
 
@@ -91,7 +92,9 @@ module OnvifClient
         wsse_auth: [username, password, :digest],
         convert_request_keys_to: :camelcase,
         pretty_print_xml: false,
-        log: false
+        log: false,
+        open_timeout: timeout,
+        read_timeout: timeout
       )
     end
 
